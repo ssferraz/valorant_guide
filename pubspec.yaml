@@ -19,7 +19,29 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/
+    - assets/agents/brimstone/
+    - assets/agents/phoenix/
+    - assets/agents/sage/
+    - assets/agents/sova/
+    - assets/agents/viper/
+    - assets/agents/cypher/
+    - assets/agents/reyna/
+    - assets/agents/killjoy/
+    - assets/agents/breach/
+    - assets/agents/omen/
+    - assets/agents/jett/
+    - assets/agents/raze/
+    - assets/agents/skye/    
+    - assets/agents/yoru/  
+    - assets/agents/astra/
+    - assets/agents/kayo/
+    - assets/agents/chamber/
+    - assets/agents/neon/    
+    - assets/agents/fade/
+    - assets/agents/harbor/  
+    - assets/agents/gekko/
+    - assets/agents/deadlock/          
+    - assets/roles/
   fonts:
     - family: Tungsten
       fonts:

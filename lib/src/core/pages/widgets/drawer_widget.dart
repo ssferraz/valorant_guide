@@ -25,6 +25,21 @@ class _DrawerWidgetState extends State<DrawerWidget> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color(0xFFBD0C2D),
+              ),
+              child: Center(
+                child: Text(
+                  'Menu',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Tungsten',
+                    fontSize: 30,
+                  ),
+                ),
+              ),
+            ),
             ListTile(
               title: const Text('Agentes'),
               selected: _selectedIndex == 0,
@@ -35,7 +50,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               },
             ),
             ListTile(
-              title: const Text('Mapas'),
+              title: const Text('Habilidades'),
               selected: _selectedIndex == 1,
               onTap: () {
                 _onItemTapped(1);

@@ -9,33 +9,45 @@ class CardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: SizedBox(
-        width: 200,
-        height: 300,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 150,
-              height: 150,
-              child: Image.asset(agent.urlImage, fit: BoxFit.contain),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Image.asset(agent.urlImage, fit: BoxFit.contain),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              agent.name,
+              style: const TextStyle(fontSize: 18),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                agent.name,
-                style: const TextStyle(fontSize: 18),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 20,
+                child: ColorFiltered(
+                  colorFilter: const ColorFilter.mode(
+                    Colors.black,
+                    BlendMode.srcIn,
+                  ),
+                  child: Image.asset(
+                    'assets/roles/${agent.role.toString().split('.').last}.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                agent.function,
-                style: const TextStyle(fontSize: 14),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  agent.getRoleString(agent.role),
+                  style: const TextStyle(fontSize: 14),
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }
