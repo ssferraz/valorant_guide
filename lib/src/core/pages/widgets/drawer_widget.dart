@@ -33,15 +33,18 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 child: Text(
                   'Menu',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Tungsten',
                     fontSize: 30,
                   ),
                 ),
               ),
             ),
             ListTile(
-              title: const Text('Agentes'),
+              title: const Text(
+                'Agentes',
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
               selected: _selectedIndex == 0,
               onTap: () {
                 _onItemTapped(0);
@@ -50,7 +53,12 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               },
             ),
             ListTile(
-              title: const Text('Habilidades'),
+              title: const Text(
+                'Sair',
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
               selected: _selectedIndex == 1,
               onTap: () {
                 _onItemTapped(1);

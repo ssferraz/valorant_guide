@@ -46,8 +46,8 @@ class _DetailsPageState extends State<DetailsPage> {
                       child: SizedBox(
                         width: 16,
                         child: Text(
-                          agent?.getRoleString(agent.role) ?? "",
-                          style: const TextStyle(fontSize: 14),
+                          agent?.getRole(agent.role) ?? "",
+                          style: const TextStyle(fontSize: 30),
                         ),
                       ),
                     ), // Espaçamento entre as imagens
@@ -69,50 +69,53 @@ class _DetailsPageState extends State<DetailsPage> {
                 'Biografia',
                 style: TextStyle(
                   fontSize: 20,
-                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(right: 16, left: 16),
-              child: Text(agent?.bio ?? "",
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                  )),
+              child: Text(
+                agent?.bio ?? "",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey.shade600,
+                ),
+              ),
             ),
             const Padding(
               padding: EdgeInsets.all(16.0),
               child: Text(
                 'Habilidades',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20),
               ),
             ),
             SizedBox(
-              height: 300, // Defina a altura máxima desejada
+              height: 300,
               child: ConstrainedBox(
                 constraints: const BoxConstraints(
-                  maxHeight: 300, // Defina a altura máxima desejada novamente
+                  maxHeight: 300,
                 ),
                 child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: 4, //agent.abilities.length,
+                  itemCount: agent?.abilities.length,
                   itemBuilder: (context, index) {
-                    //final ability = agent.abilities[index];
-                    return const Card(
+                    final ability = agent?.abilities[index];
+                    return Card(
                       child: ListTile(
-                        leading: Icon(Icons.star),
-                        /*Image.asset(
-                        ability.imagePath,
-                        height: 50,
-                        width: 50,
-                        fit: BoxFit.contain,
-                      ),*/
-                        title: Text('ability.name'),
-                        subtitle: Text('ability.description'),
+                        leading: ColorFiltered(
+                          colorFilter: const ColorFilter.mode(
+                            Colors.black,
+                            BlendMode.srcIn,
+                          ),
+                          child: Image.asset(
+                            ability?.imagePath ?? "",
+                            height: 50,
+                            width: 50,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        title: Text(ability?.name ?? ""),
+                        subtitle: Text(ability?.description ?? ""),
                       ),
                     );
                   },

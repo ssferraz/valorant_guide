@@ -41,8 +41,11 @@ class CardWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  agent.getRoleString(agent.role),
-                  style: const TextStyle(fontSize: 14),
+                  agent.getRole(agent.role),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey.shade600,
+                  ),
                 ),
               ),
             ],
