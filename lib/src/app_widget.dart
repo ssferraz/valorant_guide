@@ -15,9 +15,9 @@ class AppWidget extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: title,
       theme: ThemeData(
-        colorScheme: lightColorScheme,
-        useMaterial3: false,
-      ),
+          colorScheme: lightColorScheme,
+          useMaterial3: false,
+          fontFamily: 'Tungsten'),
       routes: {
         '/': (context) => HomePage(title: title),
         '/details': (context) => const DetailsPage(),
