@@ -15,7 +15,7 @@ class Agent {
       required this.bio,
       required this.abilities});
 
-  String getRoleString(Role role) {
+  String getRole(Role role) {
     switch (role) {
       case Role.duelist:
         return 'Duelista';
