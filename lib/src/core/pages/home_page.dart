@@ -3,6 +3,7 @@ import 'package:valorant_guide/src/core/pages/widgets/card_widget.dart';
 import 'package:valorant_guide/src/core/pages/widgets/drawer_widget.dart';
 import 'package:valorant_guide/src/core/repositories/local_storage_repository.dart';
 
+import '../models/agent.dart';
 import '../models/role.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,96 +16,101 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var agents = LocalStorageRepository.getAgents();
+  late List<Agent> originalAgents;
+  List<Agent> agents = [];
 
   TextEditingController nameFilterController = TextEditingController();
   Role? selectedRole;
   bool clearFilter = false;
 
+  @override
+  void initState() {
+    super.initState();
+    originalAgents = LocalStorageRepository.getAgents();
+    agents.addAll(originalAgents); // Crie uma cópia da lista original
+  }
+
   void _showFilterDialog(BuildContext context) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-            builder: (context, setState) {
-              return AlertDialog(
-                title: const Text('Filtrar'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextFormField(
-                      controller: nameFilterController,
-                      decoration:
-                          const InputDecoration(labelText: 'Nome do Agente'),
-                    ),
-                    DropdownButton<Role>(
-                      value: selectedRole,
-                      onChanged: (value) {
-                        setState(() {
-                          if (value != null) {
-                            selectedRole = value;
-                          }
-                        });
-                      },
-                      items: Role.values.map((role) {
-                        return DropdownMenuItem<Role>(
-                          value: role,
-                          child: Text(role.toString().split('.').last),
-                        );
-                      }).toList(),
-                      hint: const Text('Selecione o Cargo'),
-                    ),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: clearFilter,
-                          onChanged: (value) {
-                            setState(() {
-                              if (value != null) {
-                                clearFilter = value;
-                              }
-                            });
-                          },
-                        ),
-                        const Text('Limpar Filtro'),
-                      ],
-                    ),
-                  ],
-                ),
-                actions: [
-                  ElevatedButton(
-                    child: const Text('Cancelar'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  ElevatedButton(
-                    child: const Text('Aplicar'),
-                    onPressed: () {
-                      if (clearFilter) {
-                        nameFilterController.clear();
-                        selectedRole = null;
-                      }
-                      final nameFilter =
-                          nameFilterController.text.toLowerCase();
-                      final filteredAgents = agents.where((agent) {
-                        final nameMatch =
-                            agent.name.toLowerCase().contains(nameFilter);
-                        final roleMatch =
-                            selectedRole == null || agent.role == selectedRole;
-                        return nameMatch && roleMatch;
-                      }).toList();
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Filtrar'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: nameFilterController,
+                decoration: const InputDecoration(labelText: 'Nome do Agente'),
+              ),
+              DropdownButton<Role>(
+                value: selectedRole,
+                onChanged: (value) {
+                  setState(() {
+                    selectedRole = value;
+                  });
+                },
+                items: Role.values.map((role) {
+                  return DropdownMenuItem<Role>(
+                    value: role,
+                    child: Text(role.toString().split('.').last),
+                  );
+                }).toList(),
+                hint: const Text('Selecione o Cargo'),
+              ),
+              Row(
+                children: [
+                  Checkbox(
+                    value: clearFilter,
+                    onChanged: (value) {
                       setState(() {
-                        agents = filteredAgents;
+                        clearFilter = value ?? false;
                       });
-                      Navigator.of(context).pop();
                     },
                   ),
+                  const Text('Limpar Filtro'),
                 ],
-              );
-            },
-          );
-        });
+              ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Aplicar'),
+              onPressed: () {
+                if (clearFilter) {
+                  nameFilterController.clear();
+                  selectedRole = null;
+                  setState(() {
+                    agents.clear();
+                    agents.addAll(originalAgents); // Restaure a lista original
+                  });
+                } else {
+                  final nameFilter = nameFilterController.text.toLowerCase();
+                  final filteredAgents = originalAgents.where((agent) {
+                    final nameMatch =
+                        agent.name.toLowerCase().contains(nameFilter);
+                    final roleMatch =
+                        selectedRole == null || agent.role == selectedRole;
+                    return nameMatch && roleMatch;
+                  }).toList();
+                  setState(() {
+                    agents.clear();
+                    agents.addAll(filteredAgents);
+                  });
+                }
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
