@@ -28,7 +28,7 @@ class _DetailsPageState extends State<DetailsPage> {
           children: <Widget>[
             Container(
               height: 200,
-              color: Colors.blue,
+              color: Colors.blue.shade300,
               child: Padding(
                 padding: const EdgeInsets.all(25.0),
                 child: Row(
@@ -37,8 +37,8 @@ class _DetailsPageState extends State<DetailsPage> {
                       flex: 1,
                       child: Image?.asset(
                         'assets/roles/${agent?.role.toString().split('.').last}.png',
-                        height: 50,
-                        width: 50,
+                        height: 30,
+                        width: 30,
                         fit: BoxFit.contain,
                       ),
                     ),
@@ -47,7 +47,7 @@ class _DetailsPageState extends State<DetailsPage> {
                         width: 16,
                         child: Text(
                           agent?.getRole(agent.role) ?? "",
-                          style: const TextStyle(fontSize: 30),
+                          style: const TextStyle(fontSize: 15),
                         ),
                       ),
                     ), // Espaçamento entre as imagens
