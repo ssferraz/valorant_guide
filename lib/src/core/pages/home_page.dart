@@ -3,6 +3,8 @@ import 'package:valorant_guide/src/core/pages/widgets/card_widget.dart';
 import 'package:valorant_guide/src/core/pages/widgets/drawer_widget.dart';
 import 'package:valorant_guide/src/core/repositories/local_storage_repository.dart';
 
+import '../models/role.dart';
+
 class HomePage extends StatefulWidget {
   final String title;
 
@@ -13,7 +15,97 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final agents = LocalStorageRepository.getAgents();
+  var agents = LocalStorageRepository.getAgents();
+
+  TextEditingController nameFilterController = TextEditingController();
+  Role? selectedRole;
+  bool clearFilter = false;
+
+  void _showFilterDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                title: const Text('Filtrar'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      controller: nameFilterController,
+                      decoration:
+                          const InputDecoration(labelText: 'Nome do Agente'),
+                    ),
+                    DropdownButton<Role>(
+                      value: selectedRole,
+                      onChanged: (value) {
+                        setState(() {
+                          if (value != null) {
+                            selectedRole = value;
+                          }
+                        });
+                      },
+                      items: Role.values.map((role) {
+                        return DropdownMenuItem<Role>(
+                          value: role,
+                          child: Text(role.toString().split('.').last),
+                        );
+                      }).toList(),
+                      hint: const Text('Selecione o Cargo'),
+                    ),
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: clearFilter,
+                          onChanged: (value) {
+                            setState(() {
+                              if (value != null) {
+                                clearFilter = value;
+                              }
+                            });
+                          },
+                        ),
+                        const Text('Limpar Filtro'),
+                      ],
+                    ),
+                  ],
+                ),
+                actions: [
+                  ElevatedButton(
+                    child: const Text('Cancelar'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  ElevatedButton(
+                    child: const Text('Aplicar'),
+                    onPressed: () {
+                      if (clearFilter) {
+                        nameFilterController.clear();
+                        selectedRole = null;
+                      }
+                      final nameFilter =
+                          nameFilterController.text.toLowerCase();
+                      final filteredAgents = agents.where((agent) {
+                        final nameMatch =
+                            agent.name.toLowerCase().contains(nameFilter);
+                        final roleMatch =
+                            selectedRole == null || agent.role == selectedRole;
+                        return nameMatch && roleMatch;
+                      }).toList();
+                      setState(() {
+                        agents = filteredAgents;
+                      });
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +116,17 @@ class _HomePageState extends State<HomePage> {
           style: const TextStyle(fontFamily: 'Tungsten', fontSize: 30),
         ),
         centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              Icons.filter_alt,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              _showFilterDialog(context);
+            },
+          )
+        ],
       ),
       drawer: const DrawerWidget(),
       body: OrientationBuilder(
