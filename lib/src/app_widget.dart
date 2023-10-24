@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:valorant_guide/src/core/pages/compositions_page.dart';
 import 'package:valorant_guide/src/core/providers/theme_provider.dart';
 
 import 'core/pages/details_page.dart';
@@ -16,6 +15,7 @@ class AppWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
+      title: title,
       themeMode: themeProvider.themeMode,
       theme: ThemeData.light().copyWith(
         colorScheme: lightColorScheme,
@@ -27,9 +27,8 @@ class AppWidget extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       routes: {
-        '/': (context) => HomePage(title: title),
+        '/': (context) => const HomePage(title: 'Agentes'),
         '/details': (context) => const DetailsPage(),
-        '/compositions': (context) => const CompositionsPage(),
       },
     );
   }

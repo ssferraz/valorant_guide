@@ -28,7 +28,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               ),
               child: Center(
                 child: Text(
-                  'Menu',
+                  'Guia do Valorant',
                   style: Theme.of(context).textTheme.displaySmall!.copyWith(
                       fontFamily: 'Tungsten',
                       fontSize: 30,
@@ -48,20 +48,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               onTap: () {
                 drawerProvider.onItemTapped(0);
                 Navigator.pushReplacementNamed(context, '/');
-              },
-            ),
-            ListTile(
-              title: const Text(
-                'Composições',
-                style: TextStyle(
-                  fontFamily: 'Tungsten',
-                  fontSize: 20,
-                ),
-              ),
-              selected: drawerProvider.selectedIndex == 1,
-              onTap: () {
-                drawerProvider.onItemTapped(1);
-                Navigator.pushReplacementNamed(context, '/compositions');
               },
             ),
             ListTile(
