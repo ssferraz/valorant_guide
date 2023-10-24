@@ -46,7 +46,11 @@ class _HomePageState extends State<HomePage> {
                     decoration:
                         const InputDecoration(labelText: 'Nome do Agente'),
                   ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   DropdownButton<Role>(
+                    isExpanded: true,
                     value: selectedRole,
                     onChanged: (value) {
                       setState(() {
@@ -60,6 +64,9 @@ class _HomePageState extends State<HomePage> {
                       );
                     }).toList(),
                     hint: const Text('Selecione o Cargo'),
+                  ),
+                  const SizedBox(
+                    height: 10,
                   ),
                   Row(
                     children: [
@@ -88,13 +95,13 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton(
               child: const Text('Aplicar'),
               onPressed: () {
-                debugPrint(clearFilter.toString());
                 if (clearFilter) {
                   setState(() {
                     nameFilterController.clear();
                     selectedRole = null;
                     agents.clear();
                     agents.addAll(originalAgents);
+                    clearFilter = false;
                   });
                 } else {
                   setState(() {
@@ -117,8 +124,6 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
-    // },
-    //);
   }
 
   @override
@@ -145,22 +150,30 @@ class _HomePageState extends State<HomePage> {
       drawer: const DrawerWidget(),
       body: OrientationBuilder(
         builder: (context, orientation) {
-          return GridView.builder(
-            shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: orientation == Orientation.portrait ? 2 : 4,
-            ),
-            itemCount: agents.length,
-            itemBuilder: (BuildContext context, int index) {
-              final agent = agents[index % agents.length];
-              return GestureDetector(
-                child: CardWidget(agent: agent),
-                onTap: () {
-                  Navigator.pushNamed(context, '/details', arguments: agent);
-                },
-              );
-            },
-          );
+          return agents.isEmpty
+              ? const Center(
+                  child: Text(
+                    "Nenhum agente encontrado.",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                )
+              : GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: orientation == Orientation.portrait ? 2 : 4,
+                  ),
+                  itemCount: agents.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final agent = agents[index % agents.length];
+                    return GestureDetector(
+                      child: CardWidget(agent: agent),
+                      onTap: () {
+                        Navigator.pushNamed(context, '/details',
+                            arguments: agent);
+                      },
+                    );
+                  },
+                );
         },
       ),
     );
