@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:valorant_guide/src/core/theme/theme_provider.dart';
 
 import 'core/pages/details_page.dart';
 import 'core/pages/home_page.dart';
@@ -11,13 +13,18 @@ class AppWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
+      themeMode: themeProvider.themeMode,
+      theme: ThemeData.light().copyWith(
+        colorScheme: lightColorScheme,
+        useMaterial3: false,
+      ),
+      darkTheme: ThemeData.dark().copyWith(
+        colorScheme: darkColorScheme,
+        useMaterial3: false,
+      ),
       debugShowCheckedModeBanner: false,
-      title: title,
-      theme: ThemeData(
-          colorScheme: lightColorScheme,
-          useMaterial3: false,
-          fontFamily: 'Tungsten'),
       routes: {
         '/': (context) => HomePage(title: title),
         '/details': (context) => const DetailsPage(),

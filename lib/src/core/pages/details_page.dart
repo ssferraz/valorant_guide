@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:valorant_guide/src/core/theme/theme_provider.dart';
 
 import '../models/agent.dart';
+import '../models/role.dart';
 
 class DetailsPage extends StatefulWidget {
   const DetailsPage({super.key});
@@ -10,9 +13,23 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
+  Color getColor(Role role) {
+    switch (role) {
+      case Role.duelist:
+        return Colors.red.shade300;
+      case Role.controller:
+        return Colors.yellow.shade300;
+      case Role.initiator:
+        return Colors.green.shade300;
+      case Role.sentinel:
+        return Colors.blue.shade300;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Agent? agent = ModalRoute.of(context)?.settings.arguments as Agent?;
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -21,6 +38,12 @@ class _DetailsPageState extends State<DetailsPage> {
           style: const TextStyle(fontFamily: 'Tungsten', fontSize: 30),
         ),
         centerTitle: true,
+        actions: <Widget>[
+          Switch(
+            value: themeProvider.themeMode == ThemeMode.dark,
+            onChanged: (_) => themeProvider.toggleTheme(),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -28,33 +51,42 @@ class _DetailsPageState extends State<DetailsPage> {
           children: <Widget>[
             Container(
               height: 200,
-              color: Colors.blue.shade300,
+              color: getColor(agent!.role),
               child: Padding(
                 padding: const EdgeInsets.all(25.0),
                 child: Row(
                   children: [
                     Expanded(
                       flex: 1,
-                      child: Image?.asset(
-                        'assets/roles/${agent?.role.toString().split('.').last}.png',
-                        height: 30,
-                        width: 30,
-                        fit: BoxFit.contain,
+                      child: ColorFiltered(
+                        colorFilter: const ColorFilter.mode(
+                          Colors.black,
+                          BlendMode.srcIn,
+                        ),
+                        child: Image.asset(
+                          'assets/roles/${agent.role.toString().split('.').last}.png',
+                          height: 30,
+                          width: 30,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                     Expanded(
                       child: SizedBox(
                         width: 16,
                         child: Text(
-                          agent?.getRole(agent.role) ?? "",
-                          style: const TextStyle(fontSize: 15),
+                          agent.getRole(agent.role),
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontFamily: 'Tungsten',
+                              color: Colors.black),
                         ),
                       ),
                     ), // Espaçamento entre as imagens
                     Expanded(
                       flex: 2,
                       child: Image.asset(
-                        agent?.urlImage ?? "",
+                        agent.urlImage,
                         height: 200,
                         fit: BoxFit.contain,
                       ),
@@ -67,18 +99,18 @@ class _DetailsPageState extends State<DetailsPage> {
               padding: EdgeInsets.all(16.0),
               child: Text(
                 'Biografia',
-                style: TextStyle(
-                  fontSize: 20,
-                ),
+                style: TextStyle(fontSize: 20, fontFamily: 'Tungsten'),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(right: 16, left: 16),
               child: Text(
-                agent?.bio ?? "",
+                agent.bio,
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.grey.shade600,
+                  color: themeProvider.themeMode == ThemeMode.dark
+                      ? Colors.grey.shade300
+                      : Colors.grey.shade600,
                 ),
               ),
             ),
@@ -86,7 +118,7 @@ class _DetailsPageState extends State<DetailsPage> {
               padding: EdgeInsets.all(16.0),
               child: Text(
                 'Habilidades',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 20, fontFamily: 'Tungsten'),
               ),
             ),
             SizedBox(
@@ -97,25 +129,31 @@ class _DetailsPageState extends State<DetailsPage> {
                 ),
                 child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: agent?.abilities.length,
+                  itemCount: agent.abilities.length,
                   itemBuilder: (context, index) {
-                    final ability = agent?.abilities[index];
+                    final ability = agent.abilities[index];
                     return Card(
                       child: ListTile(
                         leading: ColorFiltered(
-                          colorFilter: const ColorFilter.mode(
-                            Colors.black,
+                          colorFilter: ColorFilter.mode(
+                            themeProvider.themeMode == ThemeMode.dark
+                                ? Colors.white
+                                : Colors.black,
                             BlendMode.srcIn,
                           ),
                           child: Image.asset(
-                            ability?.imagePath ?? "",
+                            ability.imagePath,
                             height: 50,
                             width: 50,
                             fit: BoxFit.contain,
                           ),
                         ),
-                        title: Text(ability?.name ?? ""),
-                        subtitle: Text(ability?.description ?? ""),
+                        title: Text(
+                          ability.name,
+                          style: const TextStyle(
+                              fontFamily: 'Tungsten', fontSize: 20),
+                        ),
+                        subtitle: Text(ability.description),
                       ),
                     );
                   },

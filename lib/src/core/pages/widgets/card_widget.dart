@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:valorant_guide/src/core/models/agent.dart';
+
+import '../../theme/theme_provider.dart';
 
 class CardWidget extends StatelessWidget {
   final Agent agent;
@@ -8,6 +11,7 @@ class CardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -19,7 +23,13 @@ class CardWidget extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               agent.name,
-              style: const TextStyle(fontSize: 18),
+              style: themeProvider.themeMode == ThemeMode.dark
+                  ? Theme.of(context).textTheme.displaySmall!.copyWith(
+                      fontFamily: 'Tungsten', fontSize: 20, color: Colors.white)
+                  : Theme.of(context).textTheme.displaySmall!.copyWith(
+                      fontFamily: 'Tungsten',
+                      fontSize: 20,
+                      color: Colors.black),
             ),
           ),
           Row(
@@ -28,8 +38,10 @@ class CardWidget extends StatelessWidget {
               SizedBox(
                 height: 20,
                 child: ColorFiltered(
-                  colorFilter: const ColorFilter.mode(
-                    Colors.black,
+                  colorFilter: ColorFilter.mode(
+                    themeProvider.themeMode == ThemeMode.dark
+                        ? Colors.white
+                        : Colors.black,
                     BlendMode.srcIn,
                   ),
                   child: Image.asset(
@@ -42,10 +54,12 @@ class CardWidget extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   agent.getRole(agent.role),
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade600,
-                  ),
+                  style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                      fontFamily: 'Tungsten',
+                      fontSize: 20,
+                      color: themeProvider.themeMode == ThemeMode.dark
+                          ? Colors.grey.shade300
+                          : Colors.grey.shade600),
                 ),
               ),
             ],

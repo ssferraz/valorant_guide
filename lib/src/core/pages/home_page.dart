@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:valorant_guide/src/core/pages/widgets/card_widget.dart';
 import 'package:valorant_guide/src/core/pages/widgets/drawer_widget.dart';
 import 'package:valorant_guide/src/core/repositories/local_storage_repository.dart';
 
 import '../models/agent.dart';
 import '../models/role.dart';
+import '../theme/theme_provider.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -63,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                         child: Text(role.toString().split('.').last),
                       );
                     }).toList(),
-                    hint: const Text('Selecione o Cargo'),
+                    hint: const Text('Selecione a Função'),
                   ),
                   const SizedBox(
                     height: 10,
@@ -75,6 +77,8 @@ class _HomePageState extends State<HomePage> {
                         onChanged: (value) {
                           setState(() {
                             clearFilter = value ?? false;
+                            selectedRole = null;
+                            nameFilterController.clear();
                           });
                         },
                       ),
@@ -128,6 +132,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -136,6 +142,10 @@ class _HomePageState extends State<HomePage> {
         ),
         centerTitle: true,
         actions: <Widget>[
+          Switch(
+            value: themeProvider.themeMode == ThemeMode.dark,
+            onChanged: (_) => themeProvider.toggleTheme(),
+          ),
           IconButton(
             icon: const Icon(
               Icons.filter_alt,

@@ -13,7 +13,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      print(_selectedIndex);
     });
   }
 
@@ -25,16 +24,17 @@ class _DrawerWidgetState extends State<DrawerWidget> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
+            DrawerHeader(
+              decoration: const BoxDecoration(
                 color: Color(0xFFBD0C2D),
               ),
               child: Center(
                 child: Text(
                   'Menu',
-                  style: TextStyle(
-                    fontSize: 30,
-                  ),
+                  style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                      fontFamily: 'Tungsten',
+                      fontSize: 30,
+                      color: Colors.black),
                 ),
               ),
             ),
@@ -42,6 +42,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               title: const Text(
                 'Agentes',
                 style: TextStyle(
+                  fontFamily: 'Tungsten',
                   fontSize: 20,
                 ),
               ),
@@ -54,22 +55,9 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             ),
             ListTile(
               title: const Text(
-                'Configurações',
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
-              selected: _selectedIndex == 1,
-              onTap: () {
-                _onItemTapped(0);
-
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text(
                 'Sair',
                 style: TextStyle(
+                  fontFamily: 'Tungsten',
                   fontSize: 20,
                 ),
               ),
