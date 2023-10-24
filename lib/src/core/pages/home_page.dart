@@ -36,95 +36,98 @@ class _HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Filtrar'),
-          content: StatefulBuilder(
-            builder: (context, setState) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextFormField(
-                    controller: nameFilterController,
-                    decoration:
-                        const InputDecoration(labelText: 'Nome do Agente'),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  DropdownButton<Role>(
-                    isExpanded: true,
-                    value: selectedRole,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedRole = value;
-                      });
-                    },
-                    items: Role.values.map((role) {
-                      return DropdownMenuItem<Role>(
-                        value: role,
-                        child: Text(role.toString().split('.').last),
-                      );
-                    }).toList(),
-                    hint: const Text('Selecione a Função'),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: clearFilter,
-                        onChanged: (value) {
-                          setState(() {
-                            clearFilter = value ?? false;
-                            selectedRole = null;
-                            nameFilterController.clear();
-                          });
-                        },
-                      ),
-                      const Text('Limpar Filtro'),
-                    ],
-                  ),
-                ],
-              );
-            },
+        return SingleChildScrollView(
+          child: AlertDialog(
+            title: const Text('Filtrar'),
+            content: StatefulBuilder(
+              builder: (context, setState) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      controller: nameFilterController,
+                      decoration:
+                          const InputDecoration(labelText: 'Nome do Agente'),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    DropdownButton<Role>(
+                      isExpanded: true,
+                      value: selectedRole,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedRole = value;
+                        });
+                      },
+                      items: Role.values.map((role) {
+                        return DropdownMenuItem<Role>(
+                          value: role,
+                          child: Text(role.toString().split('.').last),
+                        );
+                      }).toList(),
+                      hint: const Text('Selecione a Função'),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: clearFilter,
+                          onChanged: (value) {
+                            setState(() {
+                              clearFilter = value ?? false;
+                              selectedRole = null;
+                              nameFilterController.clear();
+                            });
+                          },
+                        ),
+                        const Text('Limpar Filtro'),
+                      ],
+                    ),
+                  ],
+                );
+              },
+            ),
+            actions: [
+              ElevatedButton(
+                child: const Text('Cancelar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              ElevatedButton(
+                child: const Text('Aplicar'),
+                onPressed: () {
+                  if (clearFilter) {
+                    setState(() {
+                      nameFilterController.clear();
+                      selectedRole = null;
+                      agents.clear();
+                      agents.addAll(originalAgents);
+                      clearFilter = false;
+                    });
+                  } else {
+                    setState(() {
+                      final nameFilter =
+                          nameFilterController.text.toLowerCase();
+                      final filteredAgents = originalAgents.where((agent) {
+                        final nameMatch =
+                            agent.name.toLowerCase().contains(nameFilter);
+                        final roleMatch =
+                            selectedRole == null || agent.role == selectedRole;
+                        return nameMatch && roleMatch;
+                      }).toList();
+                      agents.clear();
+                      agents.addAll(filteredAgents);
+                    });
+                  }
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
           ),
-          actions: [
-            ElevatedButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Aplicar'),
-              onPressed: () {
-                if (clearFilter) {
-                  setState(() {
-                    nameFilterController.clear();
-                    selectedRole = null;
-                    agents.clear();
-                    agents.addAll(originalAgents);
-                    clearFilter = false;
-                  });
-                } else {
-                  setState(() {
-                    final nameFilter = nameFilterController.text.toLowerCase();
-                    final filteredAgents = originalAgents.where((agent) {
-                      final nameMatch =
-                          agent.name.toLowerCase().contains(nameFilter);
-                      final roleMatch =
-                          selectedRole == null || agent.role == selectedRole;
-                      return nameMatch && roleMatch;
-                    }).toList();
-                    agents.clear();
-                    agents.addAll(filteredAgents);
-                  });
-                }
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
         );
       },
     );
