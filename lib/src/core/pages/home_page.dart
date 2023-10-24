@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   TextEditingController nameFilterController = TextEditingController();
   Role? selectedRole;
   bool clearFilter = false;
+  bool? selectedValue;
 
   @override
   void initState() {
@@ -50,9 +51,7 @@ class _HomePageState extends State<HomePage> {
                       decoration:
                           const InputDecoration(labelText: 'Nome do Agente'),
                     ),
-                    const SizedBox(
-                      height: 5,
-                    ),
+                    const SizedBox(height: 10),
                     DropdownButton<Role>(
                       isExpanded: true,
                       value: selectedRole,
@@ -69,8 +68,31 @@ class _HomePageState extends State<HomePage> {
                       }).toList(),
                       hint: const Text('Selecione a Função'),
                     ),
-                    const SizedBox(
-                      height: 5,
+                    const SizedBox(height: 10),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (int i = 0; i < 2; i++)
+                            Row(
+                              children: [
+                                Radio(
+                                  value: i == 0,
+                                  groupValue: selectedValue,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedValue = value;
+                                    });
+                                  },
+                                ),
+                                i == 0
+                                    ? const Text("Favoritos")
+                                    : const Text("Não Favoritos"),
+                              ],
+                            ),
+                        ],
+                      ),
                     ),
                     Row(
                       children: [
@@ -108,6 +130,7 @@ class _HomePageState extends State<HomePage> {
                       agents.clear();
                       agents.addAll(originalAgents);
                       clearFilter = false;
+                      selectedValue = null;
                     });
                   } else {
                     setState(() {
@@ -118,7 +141,11 @@ class _HomePageState extends State<HomePage> {
                             agent.name.toLowerCase().contains(nameFilter);
                         final roleMatch =
                             selectedRole == null || agent.role == selectedRole;
-                        return nameMatch && roleMatch;
+                        final valueMatch = selectedValue == null ||
+                            (selectedValue!
+                                ? agent.isFavorite
+                                : !agent.isFavorite);
+                        return nameMatch && roleMatch && valueMatch;
                       }).toList();
                       agents.clear();
                       agents.addAll(filteredAgents);

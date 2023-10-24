@@ -43,7 +43,21 @@ class _DetailsPageState extends State<DetailsPage> {
           SwitchWidget(
             value: themeProvider.themeMode == ThemeMode.dark,
             onChanged: themeProvider.toggleTheme,
-          )
+          ),
+          IconButton(
+            icon: Icon(
+              agent?.isFavorite == true ? Icons.star : Icons.star_border,
+              color: agent?.isFavorite == true ? Colors.yellow : null,
+            ),
+            tooltip: 'Favorite Agent',
+            onPressed: () {
+              setState(() {
+                if (agent != null) {
+                  agent.isFavorite = !agent.isFavorite;
+                }
+              });
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(

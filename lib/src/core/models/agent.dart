@@ -7,13 +7,15 @@ class Agent {
   final String urlImage;
   final String bio;
   final List<Ability> abilities;
+  late bool isFavorite;
 
   Agent(
       {required this.name,
       required this.role,
       required this.urlImage,
       required this.bio,
-      required this.abilities});
+      required this.abilities,
+      this.isFavorite = false});
 
   String getRole(Role role) {
     switch (role) {
