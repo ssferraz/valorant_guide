@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/drawer_provider.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({super.key});
@@ -8,16 +12,10 @@ class DrawerWidget extends StatefulWidget {
 }
 
 class _DrawerWidgetState extends State<DrawerWidget> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final drawerProvider = Provider.of<DrawerProvider>(context);
+
     return SizedBox(
       width: MediaQuery.sizeOf(context).width * 0.5,
       child: Drawer(
@@ -46,11 +44,24 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   fontSize: 20,
                 ),
               ),
-              selected: _selectedIndex == 0,
+              selected: drawerProvider.selectedIndex == 0,
               onTap: () {
-                _onItemTapped(0);
-
-                Navigator.pop(context);
+                drawerProvider.onItemTapped(0);
+                Navigator.pushReplacementNamed(context, '/');
+              },
+            ),
+            ListTile(
+              title: const Text(
+                'Composições',
+                style: TextStyle(
+                  fontFamily: 'Tungsten',
+                  fontSize: 20,
+                ),
+              ),
+              selected: drawerProvider.selectedIndex == 1,
+              onTap: () {
+                drawerProvider.onItemTapped(1);
+                Navigator.pushReplacementNamed(context, '/compositions');
               },
             ),
             ListTile(
@@ -61,11 +72,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   fontSize: 20,
                 ),
               ),
-              selected: _selectedIndex == 1,
+              selected: drawerProvider.selectedIndex == 2,
               onTap: () {
-                _onItemTapped(1);
-
-                Navigator.pop(context);
+                drawerProvider.onItemTapped(2);
+                SystemNavigator.pop();
               },
             ),
           ],

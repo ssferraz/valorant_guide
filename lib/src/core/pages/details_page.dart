@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:valorant_guide/src/core/theme/theme_provider.dart';
+import 'package:valorant_guide/src/core/providers/theme_provider.dart';
 
 import '../models/agent.dart';
 import '../models/role.dart';
+import 'widgets/switch_widget.dart';
 
 class DetailsPage extends StatefulWidget {
   const DetailsPage({super.key});
@@ -39,10 +40,10 @@ class _DetailsPageState extends State<DetailsPage> {
         ),
         centerTitle: true,
         actions: <Widget>[
-          Switch(
+          SwitchWidget(
             value: themeProvider.themeMode == ThemeMode.dark,
-            onChanged: (_) => themeProvider.toggleTheme(),
-          ),
+            onChanged: themeProvider.toggleTheme,
+          )
         ],
       ),
       body: SingleChildScrollView(

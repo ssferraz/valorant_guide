@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:valorant_guide/src/core/theme/theme_provider.dart';
+import 'package:valorant_guide/src/core/pages/compositions_page.dart';
+import 'package:valorant_guide/src/core/providers/theme_provider.dart';
 
 import 'core/pages/details_page.dart';
 import 'core/pages/home_page.dart';
@@ -28,6 +29,7 @@ class AppWidget extends StatelessWidget {
       routes: {
         '/': (context) => HomePage(title: title),
         '/details': (context) => const DetailsPage(),
+        '/compositions': (context) => const CompositionsPage(),
       },
     );
   }

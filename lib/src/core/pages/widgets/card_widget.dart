@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:valorant_guide/src/core/models/agent.dart';
 
-import '../../theme/theme_provider.dart';
+import '../../providers/theme_provider.dart';
 
 class CardWidget extends StatelessWidget {
   final Agent agent;

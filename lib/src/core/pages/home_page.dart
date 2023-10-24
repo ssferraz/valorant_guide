@@ -6,7 +6,8 @@ import 'package:valorant_guide/src/core/repositories/local_storage_repository.da
 
 import '../models/agent.dart';
 import '../models/role.dart';
-import '../theme/theme_provider.dart';
+import '../providers/theme_provider.dart';
+import 'widgets/switch_widget.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -145,9 +146,9 @@ class _HomePageState extends State<HomePage> {
         ),
         centerTitle: true,
         actions: <Widget>[
-          Switch(
+          SwitchWidget(
             value: themeProvider.themeMode == ThemeMode.dark,
-            onChanged: (_) => themeProvider.toggleTheme(),
+            onChanged: themeProvider.toggleTheme,
           ),
           IconButton(
             icon: const Icon(
