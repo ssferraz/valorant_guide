@@ -39,6 +39,13 @@ class _DetailsPageState extends State<DetailsPage> {
           style: const TextStyle(fontFamily: 'Tungsten', fontSize: 30),
         ),
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            // Retorne o objeto Agent atualizado quando o botão Voltar for pressionado
+            Navigator.pop(context, agent);
+          },
+        ),
         actions: <Widget>[
           SwitchWidget(
             value: themeProvider.themeMode == ThemeMode.dark,

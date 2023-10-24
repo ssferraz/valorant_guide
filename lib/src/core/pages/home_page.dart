@@ -12,7 +12,7 @@ import 'widgets/switch_widget.dart';
 class HomePage extends StatefulWidget {
   final String title;
 
-  const HomePage({super.key, required this.title});
+  const HomePage({Key? key, required this.title}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -32,6 +32,21 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     originalAgents = LocalStorageRepository.getAgents();
     agents.addAll(originalAgents);
+  }
+
+  void updateAgentList() {
+    final nameFilter = nameFilterController.text.toLowerCase();
+    final filteredAgents = originalAgents.where((agent) {
+      final nameMatch = agent.name.toLowerCase().contains(nameFilter);
+      final roleMatch = selectedRole == null || agent.role == selectedRole;
+      final valueMatch = selectedValue == null ||
+          (selectedValue! ? agent.isFavorite : !agent.isFavorite);
+      return nameMatch && roleMatch && valueMatch;
+    }).toList();
+    setState(() {
+      agents.clear();
+      agents.addAll(filteredAgents);
+    });
   }
 
   void _showFilterDialog(BuildContext context) {
@@ -133,23 +148,7 @@ class _HomePageState extends State<HomePage> {
                       selectedValue = null;
                     });
                   } else {
-                    setState(() {
-                      final nameFilter =
-                          nameFilterController.text.toLowerCase();
-                      final filteredAgents = originalAgents.where((agent) {
-                        final nameMatch =
-                            agent.name.toLowerCase().contains(nameFilter);
-                        final roleMatch =
-                            selectedRole == null || agent.role == selectedRole;
-                        final valueMatch = selectedValue == null ||
-                            (selectedValue!
-                                ? agent.isFavorite
-                                : !agent.isFavorite);
-                        return nameMatch && roleMatch && valueMatch;
-                      }).toList();
-                      agents.clear();
-                      agents.addAll(filteredAgents);
-                    });
+                    updateAgentList(); // Reaplique o filtro
                   }
                   Navigator.of(context).pop();
                 },
@@ -208,9 +207,16 @@ class _HomePageState extends State<HomePage> {
                     final agent = agents[index % agents.length];
                     return GestureDetector(
                       child: CardWidget(agent: agent),
-                      onTap: () {
-                        Navigator.pushNamed(context, '/details',
+                      onTap: () async {
+                        final updatedAgent = await Navigator.pushNamed(
+                            context, '/details',
                             arguments: agent);
+                        if (updatedAgent != null && updatedAgent is Agent) {
+                          setState(() {
+                            agents[index] = updatedAgent;
+                            updateAgentList(); // Reaplique o filtro ao voltar
+                          });
+                        }
                       },
                     );
                   },
