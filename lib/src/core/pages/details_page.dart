@@ -42,7 +42,6 @@ class _DetailsPageState extends State<DetailsPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // Retorne o objeto Agent atualizado quando o botão Voltar for pressionado
             Navigator.pop(context, agent);
           },
         ),
@@ -104,7 +103,7 @@ class _DetailsPageState extends State<DetailsPage> {
                               color: Colors.black),
                         ),
                       ),
-                    ), // Espaçamento entre as imagens
+                    ),
                     Expanded(
                       flex: 2,
                       child: Image.asset(

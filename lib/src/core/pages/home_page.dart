@@ -118,6 +118,7 @@ class _HomePageState extends State<HomePage> {
                               clearFilter = value ?? false;
                               selectedRole = null;
                               nameFilterController.clear();
+                              selectedValue = null;
                             });
                           },
                         ),
@@ -148,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                       selectedValue = null;
                     });
                   } else {
-                    updateAgentList(); // Reaplique o filtro
+                    updateAgentList();
                   }
                   Navigator.of(context).pop();
                 },
@@ -214,7 +215,7 @@ class _HomePageState extends State<HomePage> {
                         if (updatedAgent != null && updatedAgent is Agent) {
                           setState(() {
                             agents[index] = updatedAgent;
-                            updateAgentList(); // Reaplique o filtro ao voltar
+                            updateAgentList();
                           });
                         }
                       },
