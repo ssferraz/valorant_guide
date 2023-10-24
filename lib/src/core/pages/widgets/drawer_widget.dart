@@ -54,6 +54,20 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             ),
             ListTile(
               title: const Text(
+                'Configurações',
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+              selected: _selectedIndex == 1,
+              onTap: () {
+                _onItemTapped(0);
+
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text(
                 'Sair',
                 style: TextStyle(
                   fontSize: 20,
