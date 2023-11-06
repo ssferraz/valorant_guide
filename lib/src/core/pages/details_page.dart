@@ -24,6 +24,8 @@ class _DetailsPageState extends State<DetailsPage> {
         return Colors.green.shade300;
       case Role.sentinel:
         return Colors.blue.shade300;
+      case Role.unknown:
+        return Colors.grey.shade300;
     }
   }
 
@@ -96,7 +98,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       child: SizedBox(
                         width: 16,
                         child: Text(
-                          agent.getRole(agent.role),
+                          agent.role.fromRole(),
                           style: const TextStyle(
                               fontSize: 20,
                               fontFamily: 'Tungsten',
