@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'ability.dart';
 import 'role.dart';
 
@@ -17,18 +19,32 @@ class Agent {
       required this.abilities,
       this.isFavorite = false});
 
-  String getRole(Role role) {
-    switch (role) {
-      case Role.duelist:
-        return 'Duelista';
-      case Role.controller:
-        return 'Controlador';
-      case Role.initiator:
-        return 'Iniciador';
-      case Role.sentinel:
-        return 'Sentinela';
-      default:
-        return '';
-    }
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'role': role.fromRole(),
+      'urlImage': urlImage,
+      'bio': bio,
+      'abilities': abilities.map((ability) => ability.toMap()).toList(),
+      'isFavorite': isFavorite ? 1 : 0,
+    };
+  }
+
+  static Agent fromMap(Map<String, dynamic> map) {
+    return Agent(
+      name: map['name'],
+      role: RoleExtension.toRole(map['role']),
+      urlImage: map['urlImage'],
+      bio: map['bio'],
+      abilities: (jsonDecode(map['abilities']) as List<dynamic>)
+          .map((abilityMap) => Ability.fromMap(abilityMap))
+          .toList(),
+      isFavorite: map['isFavorite'] == 1,
+    );
+  }
+
+  @override
+  String toString() {
+    return name;
   }
 }

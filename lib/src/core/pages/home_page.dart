@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:valorant_guide/src/core/pages/widgets/card_widget.dart';
 import 'package:valorant_guide/src/core/pages/widgets/drawer_widget.dart';
 import 'package:valorant_guide/src/core/repositories/local_storage_repository.dart';
 
+import '../database/db.dart';
 import '../models/agent.dart';
 import '../models/role.dart';
 import '../providers/theme_provider.dart';
@@ -19,30 +21,56 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late List<Agent> originalAgents;
   List<Agent> agents = [];
-
-  TextEditingController nameFilterController = TextEditingController();
+  final nameFilterController = TextEditingController();
   Role? selectedRole;
-  bool clearFilter = false;
+  bool? clearFilter = false;
   bool? selectedValue;
 
   @override
   void initState() {
     super.initState();
-    originalAgents = LocalStorageRepository.getAgents();
-    agents.addAll(originalAgents);
+    _insertAgents();
+    _loadFilterState();
   }
 
-  void updateAgentList() {
+  _insertAgents() async {
+    final db = DB.instance;
+    final agents = await db.getAllAgents();
+    if (agents.isEmpty) {
+      await db.insertAgents(LocalStorageRepository.getAgents());
+    }
+  }
+
+  Future<void> _loadFilterState() async {
+    final prefs = await SharedPreferences.getInstance();
+    nameFilterController.text = prefs.getString('nameFilter') ?? '';
+    final selectedRoleIndex = prefs.getInt('selectedRole');
+    selectedRole = selectedRoleIndex != null &&
+            selectedRoleIndex >= 0 &&
+            selectedRoleIndex < Role.values.length
+        ? Role.values[selectedRoleIndex]
+        : null;
+    selectedValue = prefs.getBool('selectedValue');
+    _applyFilter();
+  }
+
+  void _applyFilter() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('nameFilter', nameFilterController.text);
+    prefs.setInt(
+        'selectedRole', selectedRole != null ? selectedRole!.index : -1);
+    prefs.setBool('selectedValue', selectedValue ?? false);
+
     final nameFilter = nameFilterController.text.toLowerCase();
-    final filteredAgents = originalAgents.where((agent) {
-      final nameMatch = agent.name.toLowerCase().contains(nameFilter);
-      final roleMatch = selectedRole == null || agent.role == selectedRole;
-      final valueMatch = selectedValue == null ||
-          (selectedValue! ? agent.isFavorite : !agent.isFavorite);
-      return nameMatch && roleMatch && valueMatch;
-    }).toList();
+    final db = DB.instance;
+
+    final filteredAgents = await db.getAgents(
+      name: nameFilter,
+      role: selectedRole,
+      isFavorite: selectedValue,
+    );
+
     setState(() {
       agents.clear();
       agents.addAll(filteredAgents);
@@ -112,13 +140,14 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       children: [
                         Checkbox(
-                          value: clearFilter,
+                          value: clearFilter ?? false,
                           onChanged: (value) {
                             setState(() {
                               clearFilter = value ?? false;
                               selectedRole = null;
                               nameFilterController.clear();
                               selectedValue = null;
+                              _applyFilter();
                             });
                           },
                         ),
@@ -133,25 +162,16 @@ class _HomePageState extends State<HomePage> {
               ElevatedButton(
                 child: const Text('Cancelar'),
                 onPressed: () {
+                  clearFilter = null;
                   Navigator.of(context).pop();
                 },
               ),
               ElevatedButton(
                 child: const Text('Aplicar'),
                 onPressed: () {
-                  if (clearFilter) {
-                    setState(() {
-                      nameFilterController.clear();
-                      selectedRole = null;
-                      agents.clear();
-                      agents.addAll(originalAgents);
-                      clearFilter = false;
-                      selectedValue = null;
-                    });
-                  } else {
-                    updateAgentList();
-                  }
+                  clearFilter = null;
                   Navigator.of(context).pop();
+                  _applyFilter();
                 },
               ),
             ],
@@ -215,7 +235,7 @@ class _HomePageState extends State<HomePage> {
                         if (updatedAgent != null && updatedAgent is Agent) {
                           setState(() {
                             agents[index] = updatedAgent;
-                            updateAgentList();
+                            _applyFilter();
                           });
                         }
                       },

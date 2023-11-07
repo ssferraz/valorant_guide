@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:valorant_guide/src/core/models/agent.dart';
+import 'package:valorant_guide/src/core/models/role.dart';
 
 import '../../providers/theme_provider.dart';
 
@@ -53,7 +54,7 @@ class CardWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  agent.getRole(agent.role),
+                  agent.role.fromRole(),
                   style: Theme.of(context).textTheme.displaySmall!.copyWith(
                       fontFamily: 'Tungsten',
                       fontSize: 20,
