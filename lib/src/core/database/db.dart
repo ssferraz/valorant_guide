@@ -41,7 +41,7 @@ class DB {
       '''
     CREATE TABLE agent (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT,
+      name TEXT UNIQUE,
       role TEXT,
       urlImage TEXT,
       bio TEXT,
@@ -55,9 +55,13 @@ class DB {
   Future<void> insertAgents(List<Agent> agents) async {
     final db = await database;
     final batch = db.batch();
-    final agents = await getAllAgents();
-    if (agents.isEmpty) {
-      for (final agent in agents) {
+    final existingAgents = await getAllAgents();
+
+    for (final agent in agents) {
+      bool agentAlreadyExists = existingAgents
+          .any((existingAgent) => existingAgent.name == agent.name);
+
+      if (!agentAlreadyExists) {
         batch.insert('agent', {
           'name': agent.name,
           'role': agent.role.fromRole(),
@@ -71,6 +75,16 @@ class DB {
     }
 
     await batch.commit();
+  }
+
+  Future<void> updateAgentFavorite(String name, bool isFavorite) async {
+    final db = await database;
+    await db.update(
+      'agent',
+      {'isFavorite': isFavorite ? 1 : 0},
+      where: 'name = ?',
+      whereArgs: [name],
+    );
   }
 
   Future<List<Agent>> getAllAgents() async {
@@ -89,8 +103,8 @@ class DB {
     final List<dynamic> args = [];
 
     if (name != null && name.isNotEmpty) {
-      queryBuilder.write(' AND name = ?');
-      args.add(name);
+      queryBuilder.write(' AND name LIKE ?');
+      args.add('%$name%');
     }
 
     if (role != null) {

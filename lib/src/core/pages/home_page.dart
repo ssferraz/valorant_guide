@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
   List<Agent> agents = [];
   final nameFilterController = TextEditingController();
   Role? selectedRole;
-  bool clearFilter = false;
+  bool? clearFilter = false;
   bool? selectedValue;
 
   @override
@@ -51,13 +51,7 @@ class _HomePageState extends State<HomePage> {
             selectedRoleIndex < Role.values.length
         ? Role.values[selectedRoleIndex]
         : null;
-    clearFilter = prefs.getBool('clearFilter') ?? false;
     selectedValue = prefs.getBool('selectedValue');
-
-    _applyFilter();
-  }
-
-  void _updateAgentList() async {
     _applyFilter();
   }
 
@@ -66,13 +60,10 @@ class _HomePageState extends State<HomePage> {
     prefs.setString('nameFilter', nameFilterController.text);
     prefs.setInt(
         'selectedRole', selectedRole != null ? selectedRole!.index : -1);
-    prefs.setBool('clearFilter', clearFilter);
     prefs.setBool('selectedValue', selectedValue ?? false);
 
     final nameFilter = nameFilterController.text.toLowerCase();
     final db = DB.instance;
-
-    final a = await db.getAllAgents();
 
     final filteredAgents = await db.getAgents(
       name: nameFilter,
@@ -149,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       children: [
                         Checkbox(
-                          value: clearFilter,
+                          value: clearFilter ?? false,
                           onChanged: (value) {
                             setState(() {
                               clearFilter = value ?? false;
@@ -171,12 +162,14 @@ class _HomePageState extends State<HomePage> {
               ElevatedButton(
                 child: const Text('Cancelar'),
                 onPressed: () {
+                  clearFilter = null;
                   Navigator.of(context).pop();
                 },
               ),
               ElevatedButton(
                 child: const Text('Aplicar'),
                 onPressed: () {
+                  clearFilter = null;
                   Navigator.of(context).pop();
                   _applyFilter();
                 },
@@ -242,7 +235,7 @@ class _HomePageState extends State<HomePage> {
                         if (updatedAgent != null && updatedAgent is Agent) {
                           setState(() {
                             agents[index] = updatedAgent;
-                            _updateAgentList();
+                            _applyFilter();
                           });
                         }
                       },

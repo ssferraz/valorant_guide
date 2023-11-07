@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:valorant_guide/src/core/providers/theme_provider.dart';
 
+import '../database/db.dart';
 import '../models/agent.dart';
 import '../models/role.dart';
 import 'widgets/switch_widget.dart';
@@ -58,12 +59,14 @@ class _DetailsPageState extends State<DetailsPage> {
               color: agent?.isFavorite == true ? Colors.yellow : null,
             ),
             tooltip: 'Favorite Agent',
-            onPressed: () {
+            onPressed: () async {
               setState(() {
                 if (agent != null) {
                   agent.isFavorite = !agent.isFavorite;
                 }
               });
+              final db = DB.instance;
+              await db.updateAgentFavorite(agent!.name, agent.isFavorite);
             },
           ),
         ],
