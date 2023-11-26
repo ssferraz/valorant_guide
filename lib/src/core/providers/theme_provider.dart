@@ -27,6 +27,7 @@ class ThemeProvider with ChangeNotifier {
     } else {
       _themeMode = ThemeMode.light;
     }
+    notifyListeners();
   }
 
   Future<void> _saveTheme() async {
