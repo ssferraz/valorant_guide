@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:valorant_guide/src/core/models/agent.dart';
 import 'package:valorant_guide/src/core/models/role.dart';
+import 'package:valorant_guide/src/core/providers/theme_provider.dart';
 
-import '../../providers/theme_provider.dart';
-
-class CardWidget extends StatelessWidget {
+class CardAgentWidget extends StatelessWidget {
   final Agent agent;
 
-  const CardWidget({Key? key, required this.agent}) : super(key: key);
+  const CardAgentWidget({Key? key, required this.agent}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

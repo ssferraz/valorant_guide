@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "864285724103",
+    "project_id": "valorant-guide-88cd3",
+    "storage_bucket": "valorant-guide-88cd3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:864285724103:android:22fb8e4a143f940f9e1de2",
+        "android_client_info": {
+          "package_name": "com.github.ssferraz.valorant_guide"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWLzoOwoPtp0TIe6lQdnF_Bti_Q22Ivh8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
