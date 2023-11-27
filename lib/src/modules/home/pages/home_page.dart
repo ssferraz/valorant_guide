@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:valorant_guide/src/core/pages/widgets/card_widget.dart';
-import 'package:valorant_guide/src/core/pages/widgets/drawer_widget.dart';
 import 'package:valorant_guide/src/core/repositories/local_storage_repository.dart';
+import 'package:valorant_guide/src/core/widgets/card_agent_widget.dart';
+import 'package:valorant_guide/src/core/widgets/drawer_widget.dart';
+import 'package:valorant_guide/src/core/widgets/switch_widget.dart';
 
-import '../database/db.dart';
-import '../models/agent.dart';
-import '../models/role.dart';
-import '../providers/theme_provider.dart';
-import 'widgets/switch_widget.dart';
+import '../../../core/database/db.dart';
+import '../../../core/models/agent.dart';
+import '../../../core/models/role.dart';
+import '../../../core/providers/theme_provider.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -36,8 +36,8 @@ class _HomePageState extends State<HomePage> {
 
   _insertAgents() async {
     final db = DB.instance;
-    final agents = await db.getAllAgents();
-    if (agents.isEmpty) {
+    final agents1 = await db.getAllAgents();
+    if (agents1.isEmpty) {
       await db.insertAgents(LocalStorageRepository.getAgents());
     }
   }
@@ -227,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (BuildContext context, int index) {
                     final agent = agents[index % agents.length];
                     return GestureDetector(
-                      child: CardWidget(agent: agent),
+                      child: CardAgentWidget(agent: agent),
                       onTap: () async {
                         final updatedAgent = await Navigator.pushNamed(
                             context, '/details',

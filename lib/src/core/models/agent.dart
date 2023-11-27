@@ -36,15 +36,38 @@ class Agent {
       role: RoleExtension.toRole(map['role']),
       urlImage: map['urlImage'],
       bio: map['bio'],
-      abilities: (jsonDecode(map['abilities']) as List<dynamic>)
-          .map((abilityMap) => Ability.fromMap(abilityMap))
-          .toList(),
+      abilities: _decodeAbilities(map['abilities']),
       isFavorite: map['isFavorite'] == 1,
     );
+  }
+
+  static List<Ability> _decodeAbilities(dynamic abilities) {
+    if (abilities is List<dynamic>) {
+      return abilities
+          .map((abilityMap) => Ability.fromMap(abilityMap))
+          .toList();
+    } else if (abilities is String) {
+      // If it's a JSON string, decode it
+      return (jsonDecode(abilities) as List<dynamic>)
+          .map((abilityMap) => Ability.fromMap(abilityMap))
+          .toList();
+    } else {
+      // Handle other cases or throw an error as needed
+      throw ArgumentError('Invalid type for abilities: $abilities');
+    }
   }
 
   @override
   String toString() {
     return name;
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Agent && other.name == name && other.role == role;
+  }
+
+  @override
+  int get hashCode => name.hashCode ^ role.hashCode;
 }

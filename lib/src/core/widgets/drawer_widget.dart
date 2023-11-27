@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-
-import '../../providers/drawer_provider.dart';
+import 'package:valorant_guide/src/core/providers/drawer_provider.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({super.key});
@@ -48,6 +47,20 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               onTap: () {
                 drawerProvider.onItemTapped(0);
                 Navigator.pushReplacementNamed(context, '/');
+              },
+            ),
+            ListTile(
+              title: const Text(
+                'Composições',
+                style: TextStyle(
+                  fontFamily: 'Tungsten',
+                  fontSize: 20,
+                ),
+              ),
+              selected: drawerProvider.selectedIndex == 1,
+              onTap: () {
+                drawerProvider.onItemTapped(1);
+                Navigator.pushReplacementNamed(context, '/compositions');
               },
             ),
             ListTile(

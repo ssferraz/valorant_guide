@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:valorant_guide/src/core/providers/theme_provider.dart';
+import 'package:valorant_guide/src/core/widgets/switch_widget.dart';
 
-import '../database/db.dart';
-import '../models/agent.dart';
-import '../models/role.dart';
-import 'widgets/switch_widget.dart';
+import '../../../core/database/db.dart';
+import '../../../core/models/agent.dart';
+import '../../../core/models/role.dart';
 
 class DetailsPage extends StatefulWidget {
   const DetailsPage({super.key});

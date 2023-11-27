@@ -642,6 +642,35 @@ class LocalStorageRepository {
               imagePath: 'assets/agents/deadlock/x.png'),
         ],
       ),
+      Agent(
+        name: 'Iso',
+        role: Role.duelist,
+        urlImage: 'assets/agents/iso/agent.png',
+        bio:
+            'Iso é um mercenário chinês que entra em estado de fluxo para desmantelar os oponentes. Ele reconfigura a energia do ambiente para se proteger de balas e avança totalmente focado em direção ao próximo duelo até a morte.',
+        abilities: [
+          Ability(
+              name: 'Q - Centelha Debilitante',
+              description:
+                  "EQUIPE um feixe molecular. DISPARE para lançá-lo à frente e aplicar FRÁGIL a todos os jogadores que tocar. O feixe pode atravessar objetos sólidos, inclusive paredes.",
+              imagePath: 'assets/agents/iso/q.png'),
+          Ability(
+              name: 'E - Fluxo Protetor',
+              description:
+                  "INICIE um cronômetro de foco. Enquanto estiver focado, entre em um estado de fluxo. Inimigos que você abater ou causar dano durante esse tempo geram um orbe de energia. Atirar nesse orbe concede a você um escudo que absorve uma instância de dano de qualquer fonte.",
+              imagePath: 'assets/agents/iso/e.png'),
+          Ability(
+              name: 'C - Contingência',
+              description:
+                  "EQUIPE para reunir energia prismática. DISPARE para enviar à frente uma parede de energia indestrutível que bloqueia balas.",
+              imagePath: 'assets/agents/iso/c.png'),
+          Ability(
+              name: 'X - Contrato de Abate',
+              description:
+                  "EQUIPE uma arena interdimensional. DISPARE para lançar uma coluna de energia pelo campo de batalha que puxa você e o primeiro inimigo atingido por ela para a arena. Você e esse oponente lutam até a morte.",
+              imagePath: 'assets/agents/iso/x.png'),
+        ],
+      ),
     ];
     return agents;
   }
