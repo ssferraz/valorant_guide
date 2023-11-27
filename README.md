@@ -3,7 +3,7 @@ Atividade avaliativa para disciplina de Programação para Dispositivos Móveis 
 
 ### Telas do Aplicativo
 
-<img src="https://github.com/ssferraz/valorant_guide/blob/main/docs/Captura-de-Tela.png?raw=true" alt="Captura de Tela" width="400">
+<img src="https://github.com/ssferraz/valorant_guide/blob/main/assets/images/Captura-de-Tela.png?raw=true" alt="Captura de Tela" width="400">
 
 ### 1. Domínio da solução: **Aplicativo Informativo**
 
